@@ -23,13 +23,13 @@ public class Player extends GObject {
 		speedx = 0;
 		speedy = 0;
 		if (needImage) {
-			loadImage("");
+			loadImage("Silksong.png");
 		}
 	}
 	void loadImage(String imageFile) {
 		if (needImage) {
 			try {
-				image = ImageIO.read(this.getClass().getResourceAsStream("C:\\Users\\avera\\OneDrive\\Desktop\\league-level2-game-SimpleDoodle-master\\league-level2-game-SimpleDoodle-master\\src\\Silksong.png"));
+				image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
 				gotImage = true;
 			} catch (Exception e) {
 				e.printStackTrace();
