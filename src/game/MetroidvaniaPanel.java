@@ -189,7 +189,7 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 			mm.draw(g);
 		}
 		g.setColor(Color.BLACK);
-		g.setColor(Color.RED);
+		g.setColor(Color.MAGENTA);
 		if (mm.p.lives <= 0) {
 			g.setColor(Color.BLACK);
 			currentState = LOST;
@@ -353,10 +353,6 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 				currentState = MENU;
 			}
 			if (currentState == LOST) {
-				mm.p.lives = 5;
-				mm.p.x = 150;
-				mm.p.y = 650;
-				mm.p.isActive = true;
 				wRoom = 0;
 				mm.bowser.lives = 10;
 				mm.bowser.isActive = false;
@@ -365,11 +361,15 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 				mm.bowser.y = 600;
 				mm.goomba.x = 600;
 				mm.goomba.y = 650;
+				mm.p.isActive = true;
 				mm.bowser.counter = 0;
 				mm.bowser.DIRECTION = LEFT;
 				mm.goomba.DIRECTION = RIGHT;
 				currentState = MENU;
+				player = new Player(150, 650, 30, 50);
+				mm = new Manager(player);
 			}
+
 		}
 		if (e.getKeyCode() == KeyEvent.VK_Z) {
 			player.up();
@@ -399,7 +399,7 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 		if (currentState == GAME) {
 			if (e.getKeyCode() == KeyEvent.VK_X) {
 				if (Direction == RIGHT) {
-					System.out.println("directionright");		
+					//System.out.println("directionright");		
 					mm.p.slash.image = mm.p.slash.right;
 					mm.addSlash(player.getSlashRight());
 				}

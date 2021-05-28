@@ -38,7 +38,7 @@ public class Player extends GObject {
 				gotImage = true;
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.out.println("No image");
+				//System.out.println("No image");
 			}
 			needImage = false;
 		}
@@ -71,7 +71,7 @@ public class Player extends GObject {
 
 	public Slash getSlashRight() {
 		slash.image = slash.right;
-		System.out.println("right");
+		//System.out.println("right");
 		if (sword == 0) {
 			return slash = new Slash(x + width, y - 20, 50, 70);
 
@@ -80,7 +80,7 @@ public class Player extends GObject {
 	}
 
 	public Slash getSlashLeft() {
-		System.out.println("left");
+		//System.out.println("left");
 		if (sword == 0) {
 			 slash = new Slash(x - width - 20, y - 20, 50, 70);
 				slash.image = slash.left;

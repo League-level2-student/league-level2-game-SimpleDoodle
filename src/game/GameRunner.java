@@ -14,6 +14,7 @@ public static void main(String[] args) {
 	frame.addKeyListener(mp);
 	frame.setVisible(true);
 	frame.setSize(WIDTH, HEIGHT);
+	frame.setTitle("Metroidvania");
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 }
 }
