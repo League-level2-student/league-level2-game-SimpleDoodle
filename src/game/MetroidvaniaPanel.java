@@ -7,7 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.util.Iterator;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -27,11 +30,14 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 	Font instructitle;
 	Font lostitle;
 	Font lostenter;
+	Font wintext;
+	Font playagain;
 	int MENU = 0;
 	int GAME = 1;
 	int PAUSE = 2;
 	int INSTRUCT = 3;
 	int LOST = 4;
+	int WIN = 5;
 	int BOSSROOM = 1;
 	int wRoom = 0;
 	int currentState = MENU;
@@ -43,6 +49,38 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 	int UP = 2;
 	int DOWN = 3;
 	int Direction = RIGHT;
+	public BufferedImage image;
+	public boolean needImage = true;
+	public boolean gotImage = false;
+	public BufferedImage image2;
+	public boolean needImage2 = true;
+	public boolean gotImage2 = false;
+
+	void loadImage(String imageFile) {
+		if (needImage) {
+			try {
+				image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
+				gotImage = true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("No image");
+			}
+			needImage = false;
+		}
+	}
+
+	void loadImage2(String imageFile2) {
+		if (needImage2) {
+			try {
+				image2 = ImageIO.read(this.getClass().getResourceAsStream(imageFile2));
+				gotImage2 = true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("No image");
+			}
+			needImage2 = false;
+		}
+	}
 
 	void updateMenuState() {
 
@@ -64,12 +102,16 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 
 	}
 
+	void updateWinState() {
+
+	}
+
 	void drawMenuState(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, GameRunner.WIDTH, GameRunner.HEIGHT);
 		g.setFont(titleFont);
 		g.setColor(Color.WHITE);
-		g.drawString("A Metroidvania", 520, 120);
+		g.drawString("A Metroidvania", 520, 140);
 		g.setFont(enterFont);
 		g.setColor(Color.WHITE);
 		g.drawString("Press ENTER to start", 615, 300);
@@ -79,10 +121,24 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 	}
 
 	void drawGameState(Graphics g) {
-		g.setColor(Color.GRAY);
-		g.fillRect(0, 0, GameRunner.WIDTH, GameRunner.HEIGHT);
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0, 700, GameRunner.WIDTH, 100);
+		if (needImage) {
+			loadImage("DungeWall.png");
+		}
+		if (gotImage) {
+			g.drawImage(image, 0, 0, GameRunner.WIDTH, GameRunner.HEIGHT, null);
+		} else {
+			g.setColor(Color.GRAY);
+			g.fillRect(0, 0, GameRunner.WIDTH, GameRunner.HEIGHT);
+		}
+		if (needImage2) {
+			loadImage2("Floor.png");
+		}
+		if (gotImage2) {
+			g.drawImage(image2, 0, 700, GameRunner.WIDTH, 100, null);
+		} else {
+			g.setColor(Color.DARK_GRAY);
+			g.fillRect(0, 700, GameRunner.WIDTH, 100);
+		}
 		if (wRoom != BOSSROOM) {
 			g.setColor(Color.BLACK);
 			g.fillRect(1300, 600, 80, 100);
@@ -204,6 +260,17 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 		g.drawString("Press ENTER to continue", 600, 440);
 	}
 
+	void drawWinState(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, GameRunner.WIDTH, GameRunner.HEIGHT);
+		g.setColor(Color.WHITE);
+		g.setFont(wintext);
+		g.drawString("YOU BEAT THE GAME!", 380, 200);
+		g.setFont(playagain);
+		g.setColor(Color.WHITE);
+		g.drawString("Congratulations! That's all there is to it.", 520, 440);
+	}
+
 	public void paintComponent(Graphics g) {
 		if (currentState == MENU) {
 			drawMenuState(g);
@@ -215,6 +282,8 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 			drawInstructState(g);
 		} else if (currentState == LOST) {
 			drawLostState(g);
+		} else if (currentState == WIN) {
+			drawWinState(g);
 		}
 
 	}
@@ -235,6 +304,8 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 		instructitle = new Font("Arial", Font.PLAIN, 72);
 		lostitle = new Font("Arial", Font.PLAIN, 72);
 		lostenter = new Font("Arial", Font.PLAIN, 28);
+		wintext = new Font("Arial", Font.PLAIN, 72);
+		playagain = new Font("Arial", Font.PLAIN, 28);
 
 		frameDraw = new Timer(1000 / 60, this);
 		frameDraw.start();
@@ -249,6 +320,9 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
+		if (currentState == GAME && wRoom == BOSSROOM && mm.bowser.isActive == false) {
+			currentState = WIN;
+		}
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			if (currentState == MENU) {
 				currentState = GAME;
@@ -325,15 +399,20 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 		if (currentState == GAME) {
 			if (e.getKeyCode() == KeyEvent.VK_X) {
 				if (Direction == RIGHT) {
+					System.out.println("directionright");		
+					mm.p.slash.image = mm.p.slash.right;
 					mm.addSlash(player.getSlashRight());
 				}
 				if (Direction == LEFT) {
+					mm.p.slash.image = mm.p.slash.left;
 					mm.addSlash(player.getSlashLeft());
 				}
 				if (Direction == UP) {
+					mm.p.slash.image = mm.p.slash.up;
 					mm.addSlash(player.getSlashUp());
 				}
 				if (Direction == DOWN) {
+					mm.p.slash.image = mm.p.slash.down;
 					mm.addSlash(player.getSlashDown());
 				}
 			}
@@ -365,6 +444,8 @@ public class MetroidvaniaPanel extends JPanel implements KeyListener, ActionList
 			updateGameState();
 		} else if (currentState == PAUSE) {
 			updatePauseState();
+		} else if (currentState == WIN) {
+			updateWinState();
 		}
 		repaint();
 	}

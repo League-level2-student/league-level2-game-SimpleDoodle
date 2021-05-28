@@ -13,9 +13,12 @@ public class Player extends GObject {
 	int counter = 0;
 	boolean isActive = true;
 	boolean hasJump = true;
-	public static BufferedImage image;
-	public static boolean needImage = true;
-	public static boolean gotImage = false;
+	public  BufferedImage image;
+	public  BufferedImage image2;
+	public  BufferedImage image3;
+	public  boolean needImage = true;
+	public  boolean gotImage = false;
+	Slash slash = new Slash(x + width, y - 20, 50, 70);
 
 
 	public Player(int x, int y, int width, int height) {
@@ -23,13 +26,15 @@ public class Player extends GObject {
 		speedx = 0;
 		speedy = 0;
 		if (needImage) {
-			loadImage("Silksong.png");
+			loadImage("Vortex.png", "VortexLeft.png");
 		}
+		image3 = image;
 	}
-	void loadImage(String imageFile) {
+	void loadImage(String imageFile, String imageFile2) {
 		if (needImage) {
 			try {
 				image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
+				image2 = ImageIO.read(this.getClass().getResourceAsStream(imageFile2));
 				gotImage = true;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -65,39 +70,49 @@ public class Player extends GObject {
 	}
 
 	public Slash getSlashRight() {
+		slash.image = slash.right;
+		System.out.println("right");
 		if (sword == 0) {
-			return new Slash(x + width, y - 20, 50, 70);
+			return slash = new Slash(x + width, y - 20, 50, 70);
 
 		}
-		return new Slash(0, 0, 0, 0);
+		return slash = new Slash(0, 0, 0, 0);
 	}
 
 	public Slash getSlashLeft() {
+		System.out.println("left");
 		if (sword == 0) {
-			return new Slash(x - width - 20, y - 20, 50, 70);
+			 slash = new Slash(x - width - 20, y - 20, 50, 70);
+				slash.image = slash.left;
+			 return slash;
 		}
-		return new Slash(0, 0, 0, 0);
+		return slash = new Slash(0, 0, 0, 0);
 	}
 
 	public Slash getSlashUp() {
+
 		if (sword == 0) {
-			return new Slash(x - width / 2 - 5, y - 25 - height / 2, 70, 50);
+			 slash = new Slash(x - width / 2 - 5, y - 25 - height / 2, 70, 50);
+			slash.image = slash.up;
+			return slash;
 		}
-		return new Slash(0, 0, 0, 0);
+		return slash = new Slash(0, 0, 0, 0);
 
 	}
 
 	public Slash getSlashDown() {
 		if (sword == 0) {
-			return new Slash(x - width / 2 - 5, y + height, 70, 50);
+			 slash = new Slash(x - width / 2 - 5, y + height, 70, 50);
+				slash.image = slash.down;
+			return slash;
 		}
-		return new Slash(0, 0, 0, 0);
+		return slash = new Slash(0, 0, 0, 0);
 
 	}
 
 	public void draw(Graphics g) {
 		if (gotImage) {
-			g.drawImage(image, x, y, width, height, null);
+			g.drawImage(image3, x, y, width, height, null);
 		} else {
 			g.setColor(Color.WHITE);
 			g.fillRect(x, y, width, height);
@@ -112,12 +127,14 @@ public class Player extends GObject {
 
 	public void left() {
 		speedx = -10;
+		image3 = image2;
 
 	}
 
 	public void right() {
 
 		speedx = 10;
+		image3 = image;
 
 	}
 

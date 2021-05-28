@@ -8,21 +8,24 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 public class Boss extends GObject {
-	public static BufferedImage image;
-	public static boolean needImage = true;
-	public static boolean gotImage = false;	
+	public  BufferedImage image;
+	public  BufferedImage image2;
+	public  BufferedImage image3;
+	public  boolean needImage = true;
+	public  boolean gotImage = false;	
 	public Boss(int x, int y, int width, int height) {
 		super(x, y, width, height);
 		// TODO Auto-generated constructor stub
 		if (needImage) {
-		    loadImage ("Pogchamp.png");
+		    loadImage ("Bosskeleton.png", "BosskeletonLeft.png");
 		}
+		image3 = image2;
 	}
 
 	public void draw(Graphics g) {
 		if (isActive == true) {
 			if (gotImage) {
-				g.drawImage(image, x, y, width, height, null);
+				g.drawImage(image3, x, y, width, height, null);
 			} else {
 				g.setColor(Color.MAGENTA);
 				g.fillRect(x, y, width, height);
@@ -41,10 +44,11 @@ public class Boss extends GObject {
 	int lives = 10;
 	boolean isActive = false;
 	int speedx = 10;
-	void loadImage(String imageFile) {
+	void loadImage(String imageFile, String imageFile2) {
 	    if (needImage) {
 	        try {
 	            image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
+	            image2 = ImageIO.read(this.getClass().getResourceAsStream(imageFile2));
 		    gotImage = true;
 	        } catch (Exception e) {
 	            
@@ -66,9 +70,11 @@ public class Boss extends GObject {
 		}
 		if (x <= 0 && DIRECTION == LEFT) {
 			DIRECTION = RIGHT;
+			image3 = image;
 		}
 		if (x >= 1450 && DIRECTION == RIGHT) {
 			DIRECTION = LEFT;
+			image3 = image2;
 		}
 		counter++;
 		if (counter >= 40) {

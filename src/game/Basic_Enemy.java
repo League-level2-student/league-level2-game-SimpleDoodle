@@ -7,19 +7,22 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 public class Basic_Enemy extends GObject {
-	public static BufferedImage image;
-	public static boolean needImage = true;
-	public static boolean gotImage = false;	
+	public  BufferedImage image;
+	public BufferedImage image2;
+	public BufferedImage image3;
+	public  boolean needImage = true;
+	public  boolean gotImage = false;	
 	public Basic_Enemy(int x, int y, int width, int height) {
 		super(x, y, width, height);
 		if (needImage) {
-		    loadImage ("Ghost.png");
+		    loadImage("TSkeletonRight.png", "TSkeleton.png");
 		}
+		image3 = image;
 	}
 	public void  draw(Graphics g){
 		if (isActive == true) {
 			if (gotImage) {
-				g.drawImage(image, x, y, width, height, null);
+				g.drawImage(image3, x, y, width, height, null);
 			} else {
 				g.setColor(Color.GREEN);
 				g.fillRect(x, y, width, height);
@@ -35,9 +38,11 @@ public class Basic_Enemy extends GObject {
 		speedx = 5;
 		if (x == 600) {
 			DIRECTION = RIGHT;
+			image3 = image;
 		}
 		if (x==1200) {
 			DIRECTION = LEFT;
+			image3 = image2;
 		}
 		if (DIRECTION == RIGHT) {
 			x+=speedx;
@@ -46,10 +51,11 @@ public class Basic_Enemy extends GObject {
 			x-=speedx;
 		}
 	}
-	void loadImage(String imageFile) {
+	void loadImage(String imageFile, String imageFile2) {
 	    if (needImage) {
 	        try {
 	            image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
+	            image2 = ImageIO.read(this.getClass().getResourceAsStream(imageFile2));
 		    gotImage = true;
 	        } catch (Exception e) {
 	            

@@ -32,6 +32,7 @@ public class Manager {
 	}
 
 		for (Slash slice : slash) {
+			System.out.println("draw");
 			slice.draw(g);
 		}
 	}
